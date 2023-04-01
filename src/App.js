@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import './App.css';
-import CookieModal from './components/CookieModal';
 import { useCookies } from './hooks/useCookies';
+const CookieModal = React.lazy(() => {
+  return new Promise(resolve =>
+    setTimeout(resolve, 500))
+    .then(() => import("./components/CookieModal"));
+});
 
 function App() {
 
@@ -38,10 +42,13 @@ function App() {
 
         <p className='mt-10'>If you want to see the popup. Then please close the browser and open it again. Or clear the cookie manually and reload the page.</p>
       </div>
-      <CookieModal
-        cookieConsent={cookieConsent}
-        handleCookieConsentAgree={handleCookieConsentAgree}
-      ></CookieModal>
+
+      <Suspense>
+        <CookieModal
+          cookieConsent={cookieConsent}
+          handleCookieConsentAgree={handleCookieConsentAgree}
+        ></CookieModal>
+      </Suspense>
     </>
   );
 }
